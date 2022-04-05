@@ -1,14 +1,15 @@
 import subprocess
 import re
 
-cmd = ["ps", "ax"]
+cmd = ["ps", "-aux"]
 output = subprocess.Popen(cmd, stdout=subprocess.PIPE).communicate()[0]
-output_string = str(output)
-processes = output_string.split("\n")
-processes = output_string.split("\\")
+output_string = str(output, 'utf-8')
+output_string = output_string.strip()
+processesEntries = output_string.split("\n")[1:]
 
-command_names = []
-for i in range(1, len(processes) - 1): 
-    command = processes[i].split()
-    command_names.append(command[5])
-    print(command_names)
+def stringToPath(s: str):
+    return s.split()[10]
+
+for idx, ele in enumerate(processesEntries):
+    path = stringToPath(ele)
+    print(path)
