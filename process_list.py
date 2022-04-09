@@ -28,12 +28,13 @@ for path in command_list:
         whereis_output_string = str(whereis_output, 'utf-8')
         process_whereis = whereis_output_string.split(':')
         process_binary_path = process_whereis[1].split()
-        # open the file and hash it, goes in the value within dictionary
         if len(process_binary_path) != 0:
             for binary in process_binary_path:
-                binary_hash = hashlib.md5(open(binary, "rb").read())
+                open_binary_file = open(binary, "rb")
+                binary_hash = hashlib.md5(open_binary_file.read())
                 binary_database[binary] = binary_hash.hexdigest()
+                open_binary_file.close()
     except:
         pass 
 
-print(binary_database)
+
