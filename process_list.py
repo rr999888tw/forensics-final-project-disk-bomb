@@ -1,9 +1,11 @@
 import subprocess
 import hashlib
 import threading
+import os
 from target_list import target_list
 
 target_list_result = target_list()
+bomb_triggered = False
 
 def stringToPath(s: str):
     return s.split()[10]
@@ -25,19 +27,21 @@ class processListThread (threading.Thread):
         self.command_name = command_name
 
     def trigger(self):
+        global bomb_triggered
         print("FIle BOMB detonating!")
+        bomb_triggered = True
 
     def whereisSearch(self, path: str):
         try:
             whereis_cmd = ["whereis", "-b", path]
             whereis_output = subprocess.Popen(whereis_cmd, stdout=subprocess.PIPE).communicate()[0]
             whereis_output_string = str(whereis_output, 'utf-8')
-            process_whereis = whereis_output_string.split(':')
-            process_binary_path = process_whereis[1].split()
-            if len(process_binary_path) != 0:
-                for binary in process_binary_path:
-                    open_binary_file = open(binary, "rb")
-                    binary_hash = hashlib.md5(open_binary_file.read())
+            process_binary_path = whereis_output_string.strip().split()[1:]
+
+            # if process_binary_path:
+            for binary in process_binary_path:
+                with open(binary, "rb") as open_binary_file:
+                    binary_hash = hashlib.md5(open_binary_file.read()).hexdigest()
                     if binary_hash in target_list_result:
                         self.trigger()
         except:
@@ -46,8 +50,7 @@ class processListThread (threading.Thread):
     def run(self):
         self.whereisSearch(self.command_name)
 
-
-while (1):
+while not bomb_triggered:
     command_list = parsePsList()
     thread_list = []
     for path in command_list:
