@@ -38,12 +38,14 @@ class processListThread (threading.Thread):
             whereis_output_string = str(whereis_output, 'utf-8')
             process_binary_path = whereis_output_string.strip().split()[1:]
 
-            # if process_binary_path:
             for binary in process_binary_path:
-                with open(binary, "rb") as open_binary_file:
-                    binary_hash = hashlib.md5(open_binary_file.read()).hexdigest()
-                    if binary_hash in target_list_result:
+                if os.path.isfile(binary):
+                    md5sum_cmd = ['md5sum', binary]
+                    md5sum_output = subprocess.Popen(md5sum_cmd, stdout=subprocess.PIPE).communicate()[0]
+                    md5sum_output_string = str(md5sum_output, 'utf-8').strip().split()[0]
+                    if md5sum_output_string in target_list_result:
                         self.trigger()
+
         except:
             pass
 
