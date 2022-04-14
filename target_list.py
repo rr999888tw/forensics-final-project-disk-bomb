@@ -5,6 +5,7 @@ def target_list():
     tools_hash = {}
     tools_hash["/usr/bin/fred"] = "6fedcdd12c7f5c6c0c028a5973a4b8e6"
     tools_hash["/usr/bin/autopsy"] = "d1a4329dcbf2371ee6054b7d8f71e16d"
+    tools_hash["/opt/lsoft/DiskEditor/DiskEditor"] = "7dde32182bd5496e6ef48419b2287af5"
     forensic_tools_file = open("forensic_tools.txt")
     command_list = forensic_tools_file.readlines()
     for command in command_list:

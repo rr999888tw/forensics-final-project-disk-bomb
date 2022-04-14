@@ -52,7 +52,7 @@ binary_database = {}
 #         pass 
 
 # Learning to use threading to make processing the process list database faster
-thread_lock = threading.Lock()
+#thread_lock = threading.Lock()
 
 class processListThread (threading.Thread):
     def __init__(self, command_name):
@@ -60,11 +60,10 @@ class processListThread (threading.Thread):
         self.command_name = command_name
 
     def run(self):
-        thread_lock.acquire()
+        # thread_lock.acquire()
         whereisSearch(self.command_name)
-        thread_lock.release()
+        # thread_lock.release()
 
-#Instead of whereis, use which
 def whereisSearch(path: str):
     try:
         whereis_cmd = ["whereis", "-b", path]
