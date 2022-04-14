@@ -1,7 +1,7 @@
 import subprocess
 import re
 
-cmd = ["ps", "-aux"]
+cmd = ["ps", "-auxwe"]
 output = subprocess.Popen(cmd, stdout=subprocess.PIPE).communicate()[0]
 output_string = str(output, 'utf-8')
 output_string = output_string.strip()
