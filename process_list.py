@@ -52,34 +52,38 @@ binary_database = {}
 #         pass 
 
 # Learning to use threading to make processing the process list database faster
-thread_lock = threading.Lock()
+# thread_lock = threading.Lock()
 
-class processListThread (threading.Thread):
+class processListThread(threading.Thread):
     def __init__(self, command_name):
         threading.Thread.__init__(self)
         self.command_name = command_name
 
     def run(self):
-        thread_lock.acquire()
-        whereisSearch(self.command_name)
-        thread_lock.release()
+        # thread_lock.acquire()
+        whichSearch(self.command_name)
+        # thread_lock.release()
 
-#Instead of whereis, use which
-def whereisSearch(path: str):
+def whichSearch(path: str):
     try:
-        whereis_cmd = ["whereis", "-b", path]
-        whereis_output = subprocess.Popen(whereis_cmd, stdout=subprocess.PIPE).communicate()[0]
-        whereis_output_string = str(whereis_output, 'utf-8')
-        process_whereis = whereis_output_string.split(':')
-        process_binary_path = process_whereis[1].split()
-        if len(process_binary_path) != 0:
-            for binary in process_binary_path:
-                open_binary_file = open(binary, "rb")
-                binary_hash = hashlib.md5(open_binary_file.read())
-                binary_database[binary] = binary_hash.hexdigest()
-                open_binary_file.close()
+        which_cmd = ["which", path]
+        which_output = subprocess.Popen(which_cmd, stdout=subprocess.PIPE).communicate()[0]
+        which_output_string = str(which_output, 'utf-8')
+        which_output_string = which_output_string.strip()
+        # process_binaries = which_output_string.split("\n")
+        # print(process_binaries)
+        # process_which = which_output_string.split(':')
+        # process_binary_path = process_which[1].split()
+        if which_output_string != '':
+            # print(which_output_string)
+            # for binary in process_binary_path:
+            open_binary_file = open(which_output_string, "rb")
+            binary_hash = hashlib.md5(open_binary_file.read())
+            binary_database[which_output_string] = binary_hash.hexdigest()
+            # print(binary_hash.hexdigest())
+            open_binary_file.close()
     except:
-        pass
+        print("Error")
 
 thread_list = []
 for path in command_list:
