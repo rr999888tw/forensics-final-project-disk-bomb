@@ -1,5 +1,6 @@
 import subprocess
 import hashlib
+import os
 
 def target_list():
     tools_hash_set = set()
@@ -18,10 +19,11 @@ def target_list():
             process_binary_path = process_whereis[1].split()
             if len(process_binary_path) != 0:
                 for binary in process_binary_path:
-                    open_binary_file = open(binary, "rb")
-                    binary_hash = hashlib.md5(open_binary_file.read()).hexdigest()
-                    tools_hash_set.add(binary_hash)
-                    open_binary_file.close()
+                    if os.path.isfile(binary):
+                        open_binary_file = open(binary, "rb")
+                        binary_hash = hashlib.md5(open_binary_file.read()).hexdigest()
+                        tools_hash_set.add(binary_hash)
+                        open_binary_file.close()
 
     return tools_hash_set
 
