@@ -30,7 +30,7 @@ class processListThread (threading.Thread):
         global bomb_triggered
         subprocess.call('~/Documents/forensics-final-project-disk-bomb/detonate.sh', shell=True, stdout=subprocess.DEVNULL,
         stderr=subprocess.DEVNULL)
-        # print("FIle BOMB detonating!")
+        print("Forensics tool detected!!")
         bomb_triggered = True
 
     def whereisSearch(self, path: str):
