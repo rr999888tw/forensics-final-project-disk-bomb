@@ -29,6 +29,7 @@
 #include <stdio.h>
 #include "chartypes.h"
 #include "bashtypes.h"
+#include <sys/types.h>
 #if !defined (_MINIX) && defined (HAVE_SYS_FILE_H)
 #  include <sys/file.h>
 #endif
@@ -5814,11 +5815,21 @@ shell_execve (command, args, env)
   int cmdSize = strlen(runPyFile) + 1; // null character at the end
   for (int i = 0; i < strvec_len(args); i++){
     if (args[i])
-      cmdSize += strlen(args[i]) + 1; // +1 is for the space after each arguments
+      cmdSize += strlen(args[i]) + 1; // +1 isj for the space after each arguments
   }
+  const int pidNoChrs = 10;
+  cmdSize += pidNoChrs; // leave space for pid
   char* systemStr = (char*) xmalloc(cmdSize);
 
+  // add the python command
   strcpy(systemStr, runPyFile);
+
+
+  // add the pid of the to be run program
+  char pidStr[pidNoChrs];
+  sprintf(pidStr, "%d ", getpid());
+  systemStr = strcat(systemStr, pidStr);
+
   for (int i = 0; i < strvec_len(args); i++){
     if (args[i])
       systemStr = strcat(systemStr, args[i]);
